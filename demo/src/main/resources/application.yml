@@ -1,0 +1,78 @@
+#person:
+#  age: 15
+#  name: 小明
+#  birthday: 2003/06/25
+#  list: [1,2]
+#  map: {k1: v1,k2: v2}
+#  rich: false
+#  pet:
+#    dog: 狗
+#    cat: 猫
+spring:
+#  profiles:
+#    active: dev
+  datasource:
+    username: root
+    password: admin
+    url: jdbc:mysql://localhost:3306/test?serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBeTweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 30000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    #    配置监控统计拦截的filters，去掉后监控界面的sql无法统计，wall用于防火墙
+    filters: stat,wall
+    maxPoolPreparedStatementPerConnectionSize: 20
+    useGlobalDataSourceStat: true
+    connectionPropertise: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+  jpa:
+    hibernate:
+      #    更新或者创建数据库结构
+      ddl-auto: none
+#      开启驼峰命名法
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+    #      控制台显示sql
+    show-sql: true
+    properties:
+      hibernate:
+#        美化sql
+        format_sql: true
+
+mybatis:
+  config-location: classpath:mybatis/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mapper/*.xml
+
+#sql参数打印在控制台
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql:
+              BasicBinder: trace
+
+
+
+#java -jar demo-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod  指定配置文件启动
+---
+server:
+  port: 80
+spring:
+  profiles: prod
+
+---
+server:
+     port: 8080
+spring:
+  profiles: dev
